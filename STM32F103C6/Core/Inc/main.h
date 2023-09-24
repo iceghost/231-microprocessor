@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdbool.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -63,7 +63,7 @@ void Error_Handler(void);
 #define LED_YELLOW_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
-
+#define SOFTWARE_TIMERS_COUNT 1
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

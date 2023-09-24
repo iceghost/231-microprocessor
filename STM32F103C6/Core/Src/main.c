@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "software_timer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -91,14 +91,16 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(GPIOA, LED_RED_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(GPIOA, LED_YELLOW_Pin, GPIO_PIN_RESET);
+  software_timer_reset(0, 2000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
-    HAL_GPIO_TogglePin(GPIOA, LED_RED_Pin | LED_YELLOW_Pin);
-    HAL_Delay(200);
-    /* USER CODE END WHILE */
+    if (software_timer_flags[0]) {
+      HAL_GPIO_TogglePin(GPIOA, LED_RED_Pin | LED_YELLOW_Pin);
+      software_timer_reset(0, 2000);
+    } /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
@@ -183,7 +185,7 @@ static void MX_TIM2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM2_Init 2 */
-
+  HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END TIM2_Init 2 */
 
 }
