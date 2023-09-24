@@ -69,6 +69,20 @@ void Error_Handler(void);
 #define LED_H_Y_GPIO_Port GPIOB
 #define LED_H_G_Pin GPIO_PIN_2
 #define LED_H_G_GPIO_Port GPIOB
+#define SEG_V_A_Pin GPIO_PIN_8
+#define SEG_V_A_GPIO_Port GPIOA
+#define SEG_V_B_Pin GPIO_PIN_9
+#define SEG_V_B_GPIO_Port GPIOA
+#define SEG_V_C_Pin GPIO_PIN_10
+#define SEG_V_C_GPIO_Port GPIOA
+#define SEG_V_D_Pin GPIO_PIN_11
+#define SEG_V_D_GPIO_Port GPIOA
+#define SEG_V_E_Pin GPIO_PIN_12
+#define SEG_V_E_GPIO_Port GPIOA
+#define SEG_V_F_Pin GPIO_PIN_13
+#define SEG_V_F_GPIO_Port GPIOA
+#define SEG_V_G_Pin GPIO_PIN_14
+#define SEG_V_G_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 #define SOFTWARE_TIMERS_COUNT 1

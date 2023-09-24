@@ -250,13 +250,19 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_V_R_Pin|LED_V_Y_Pin|LED_V_G_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED_V_R_Pin|LED_V_Y_Pin|LED_V_G_Pin|SEG_V_A_Pin
+                          |SEG_V_B_Pin|SEG_V_C_Pin|SEG_V_D_Pin|SEG_V_E_Pin
+                          |SEG_V_F_Pin|SEG_V_G_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LED_H_R_Pin|LED_H_Y_Pin|LED_H_G_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_V_R_Pin LED_V_Y_Pin LED_V_G_Pin */
-  GPIO_InitStruct.Pin = LED_V_R_Pin|LED_V_Y_Pin|LED_V_G_Pin;
+  /*Configure GPIO pins : LED_V_R_Pin LED_V_Y_Pin LED_V_G_Pin SEG_V_A_Pin
+                           SEG_V_B_Pin SEG_V_C_Pin SEG_V_D_Pin SEG_V_E_Pin
+                           SEG_V_F_Pin SEG_V_G_Pin */
+  GPIO_InitStruct.Pin = LED_V_R_Pin|LED_V_Y_Pin|LED_V_G_Pin|SEG_V_A_Pin
+                          |SEG_V_B_Pin|SEG_V_C_Pin|SEG_V_D_Pin|SEG_V_E_Pin
+                          |SEG_V_F_Pin|SEG_V_G_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
