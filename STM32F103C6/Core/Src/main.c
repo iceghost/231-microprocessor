@@ -91,39 +91,56 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   enum {
-    RED,
-    GREEN,
-    YELLOW,
-  } state = RED;
-  software_timer_reset(0, 5000);
+    RED_GREEN,
+    RED_YELLOW,
+    GREEN_RED,
+    YELLOW_RED,
+  } state = RED_GREEN;
+  software_timer_reset(0, 3000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
     switch (state) {
-    case RED:
-      HAL_GPIO_WritePin(GPIOA, LED_RED_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOA, LED_YELLOW_Pin | LED_GREEN_Pin, GPIO_PIN_SET);
+    case RED_GREEN:
+      HAL_GPIO_WritePin(GPIOA, LED_V_R_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOA, LED_V_G_Pin | LED_V_Y_Pin, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOB, LED_H_G_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOB, LED_H_R_Pin | LED_H_Y_Pin, GPIO_PIN_SET);
       if (software_timer_flags[0]) {
-        state = GREEN;
-        software_timer_reset(0, 3000);
-      }
-      break;
-    case GREEN:
-      HAL_GPIO_WritePin(GPIOA, LED_GREEN_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOA, LED_YELLOW_Pin | LED_RED_Pin, GPIO_PIN_SET);
-      if (software_timer_flags[0]) {
-        state = YELLOW;
+        state = RED_YELLOW;
         software_timer_reset(0, 2000);
       }
       break;
-    case YELLOW:
-      HAL_GPIO_WritePin(GPIOA, LED_YELLOW_Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(GPIOA, LED_RED_Pin | LED_GREEN_Pin, GPIO_PIN_SET);
+    case RED_YELLOW:
+      HAL_GPIO_WritePin(GPIOA, LED_V_R_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOA, LED_V_G_Pin | LED_V_Y_Pin, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOB, LED_H_Y_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOB, LED_H_R_Pin | LED_H_G_Pin, GPIO_PIN_SET);
       if (software_timer_flags[0]) {
-        state = RED;
-        software_timer_reset(0, 5000);
+        state = GREEN_RED;
+        software_timer_reset(0, 3000);
+      }
+      break;
+    case GREEN_RED:
+      HAL_GPIO_WritePin(GPIOA, LED_V_G_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOA, LED_V_R_Pin | LED_V_Y_Pin, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOB, LED_H_R_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOB, LED_H_G_Pin | LED_H_Y_Pin, GPIO_PIN_SET);
+      if (software_timer_flags[0]) {
+        state = YELLOW_RED;
+        software_timer_reset(0, 2000);
+      }
+      break;
+    case YELLOW_RED:
+      HAL_GPIO_WritePin(GPIOA, LED_V_Y_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOA, LED_V_G_Pin | LED_V_R_Pin, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOB, LED_H_R_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOB, LED_H_G_Pin | LED_H_Y_Pin, GPIO_PIN_SET);
+      if (software_timer_flags[0]) {
+        state = RED_GREEN;
+        software_timer_reset(0, 3000);
       }
       break;
     }
