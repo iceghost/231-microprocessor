@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "software_timer.h"
+#include "stm32f1xx_hal_gpio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -89,17 +90,43 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOA, LED_YELLOW_Pin, GPIO_PIN_RESET);
-  software_timer_reset(0, 2000);
+  enum {
+    RED,
+    GREEN,
+    YELLOW,
+  } state = RED;
+  software_timer_reset(0, 5000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
-    if (software_timer_flags[0]) {
-      HAL_GPIO_TogglePin(GPIOA, LED_RED_Pin | LED_YELLOW_Pin);
-      software_timer_reset(0, 2000);
+    switch (state) {
+    case RED:
+      HAL_GPIO_WritePin(GPIOA, LED_RED_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOA, LED_YELLOW_Pin | LED_GREEN_Pin, GPIO_PIN_SET);
+      if (software_timer_flags[0]) {
+        state = GREEN;
+        software_timer_reset(0, 3000);
+      }
+      break;
+    case GREEN:
+      HAL_GPIO_WritePin(GPIOA, LED_GREEN_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOA, LED_YELLOW_Pin | LED_RED_Pin, GPIO_PIN_SET);
+      if (software_timer_flags[0]) {
+        state = YELLOW;
+        software_timer_reset(0, 2000);
+      }
+      break;
+    case YELLOW:
+      HAL_GPIO_WritePin(GPIOA, LED_YELLOW_Pin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOA, LED_RED_Pin | LED_GREEN_Pin, GPIO_PIN_SET);
+      if (software_timer_flags[0]) {
+        state = RED;
+        software_timer_reset(0, 5000);
+      }
+      break;
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
