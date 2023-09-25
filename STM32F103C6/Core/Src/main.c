@@ -89,12 +89,45 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  
+  uint16_t pins[12] = {
+      HAND_0_Pin, HAND_1_Pin, HAND_2_Pin, HAND_3_Pin, HAND_4_Pin,  HAND_5_Pin,
+      HAND_6_Pin, HAND_7_Pin, HAND_8_Pin, HAND_9_Pin, HAND_10_Pin, HAND_11_Pin,
+  };
+  uint16_t all_pins = 0;
+  for (size_t i = 0; i < 12; i++) {
+    all_pins |= pins[i];
+  }
+
+  uint8_t second = 0;
+  uint8_t minute = 0;
+  uint8_t hour = 0;
+  /* second hand moves every 5s */
+  software_timer_reset(0, 5000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
+    uint16_t on_pins = pins[second] | pins[minute] | pins[hour];
+    HAL_GPIO_WritePin(GPIOA, all_pins & ~on_pins, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOA, on_pins, GPIO_PIN_RESET);
+
+    if (software_timer_flags[0]) {
+
+      second += 1;
+      if (second == 12) {
+        second = 0;
+        minute += 1;
+      }
+      if (minute == 12) {
+        minute = 0;
+        hour += 1;
+      }
+      if (hour == 12)
+        hour = 0;
+
+      software_timer_reset(0, 5000);
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

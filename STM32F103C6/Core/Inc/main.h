@@ -83,7 +83,7 @@ void Error_Handler(void);
 #define HAND_11_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
-#define SOFTWARE_TIMERS_COUNT 2
+#define SOFTWARE_TIMERS_COUNT 1
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
