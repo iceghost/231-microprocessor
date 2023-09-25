@@ -99,9 +99,14 @@ int main(void)
   } state = RED_GREEN;
   software_timer_reset(0, 3000);
 
-  uint8_t count = 0;
-  segment_display_t sd = {.port = GPIOA};
-  INIT_SEGMENT_DISPLAY_PINS(sd, SEG_V);
+  uint8_t count_v = 5;
+  segment_display_t sd_v = {.port = GPIOA};
+  INIT_SEGMENT_DISPLAY_PINS(sd_v, SEG_V);
+
+  uint8_t count_h = 3;
+  segment_display_t sd_h = {.port = GPIOB};
+  INIT_SEGMENT_DISPLAY_PINS(sd_h, SEG_H);
+
   software_timer_reset(1, 1000);
   /* USER CODE END 2 */
 
@@ -116,6 +121,7 @@ int main(void)
       HAL_GPIO_WritePin(GPIOB, LED_H_R_Pin | LED_H_Y_Pin, GPIO_PIN_SET);
       if (software_timer_flags[0]) {
         state = RED_YELLOW;
+        count_h = 2;
         software_timer_reset(0, 2000);
       }
       break;
@@ -126,6 +132,8 @@ int main(void)
       HAL_GPIO_WritePin(GPIOB, LED_H_R_Pin | LED_H_G_Pin, GPIO_PIN_SET);
       if (software_timer_flags[0]) {
         state = GREEN_RED;
+        count_v = 3;
+        count_h = 5;
         software_timer_reset(0, 3000);
       }
       break;
@@ -136,6 +144,7 @@ int main(void)
       HAL_GPIO_WritePin(GPIOB, LED_H_G_Pin | LED_H_Y_Pin, GPIO_PIN_SET);
       if (software_timer_flags[0]) {
         state = YELLOW_RED;
+        count_v = 2;
         software_timer_reset(0, 2000);
       }
       break;
@@ -146,14 +155,18 @@ int main(void)
       HAL_GPIO_WritePin(GPIOB, LED_H_G_Pin | LED_H_Y_Pin, GPIO_PIN_SET);
       if (software_timer_flags[0]) {
         state = RED_GREEN;
+        count_v = 5;
+        count_h = 3;
         software_timer_reset(0, 3000);
       }
       break;
     }
 
-    segment_display_show_num(&sd, count);
+    segment_display_show_num(&sd_v, count_v);
+    segment_display_show_num(&sd_h, count_h);
     if (software_timer_flags[1]) {
-      count = (count + 1) % 10;
+      count_v -= 1;
+      count_h -= 1;
       software_timer_reset(1, 1000);
     }
     /* USER CODE END WHILE */
