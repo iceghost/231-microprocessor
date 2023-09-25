@@ -83,6 +83,20 @@ void Error_Handler(void);
 #define SEG_V_F_GPIO_Port GPIOA
 #define SEG_V_G_Pin GPIO_PIN_14
 #define SEG_V_G_GPIO_Port GPIOA
+#define SEG_H_A_Pin GPIO_PIN_3
+#define SEG_H_A_GPIO_Port GPIOB
+#define SEG_H_B_Pin GPIO_PIN_4
+#define SEG_H_B_GPIO_Port GPIOB
+#define SEG_H_C_Pin GPIO_PIN_5
+#define SEG_H_C_GPIO_Port GPIOB
+#define SEG_H_D_Pin GPIO_PIN_6
+#define SEG_H_D_GPIO_Port GPIOB
+#define SEG_H_E_Pin GPIO_PIN_7
+#define SEG_H_E_GPIO_Port GPIOB
+#define SEG_H_F_Pin GPIO_PIN_8
+#define SEG_H_F_GPIO_Port GPIOB
+#define SEG_H_G_Pin GPIO_PIN_9
+#define SEG_H_G_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 #define SOFTWARE_TIMERS_COUNT 2
