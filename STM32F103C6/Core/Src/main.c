@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "segment_display.h"
 #include "software_timer.h"
 #include "stm32f1xx_hal_gpio.h"
 /* USER CODE END Includes */
@@ -97,6 +98,11 @@ int main(void)
     YELLOW_RED,
   } state = RED_GREEN;
   software_timer_reset(0, 3000);
+
+  uint8_t count = 0;
+  segment_display_t sd = {.port = GPIOA};
+  INIT_SEGMENT_DISPLAY_PINS(sd, SEG_V);
+  software_timer_reset(1, 1000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -143,6 +149,12 @@ int main(void)
         software_timer_reset(0, 3000);
       }
       break;
+    }
+
+    segment_display_show_num(&sd, count);
+    if (software_timer_flags[1]) {
+      count = (count + 1) % 10;
+      software_timer_reset(1, 1000);
     }
     /* USER CODE END WHILE */
 
