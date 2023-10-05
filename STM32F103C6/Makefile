@@ -54,7 +54,8 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c \
 Core/Src/system_stm32f1xx.c \
 ../Lib/Src/software_timer.c \
-../Lib/Src/segment_display.c
+../Lib/Src/segment_display.c \
+../Lib/Src/matrix_display.c \
 
 # ASM sources
 ASM_SOURCES =  \
