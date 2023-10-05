@@ -28,13 +28,12 @@ void segment_display_show_num(segment_display_t *sd, uint8_t num) {
 
 void segment_display_array_show(segment_display_array_t *sd_arr,
                                 uint8_t *digits, size_t size) {
-  uint16_t on_pins = sd_arr->en_pins[sd_arr->active_pin_i];
   uint16_t all_pins = 0;
+  uint16_t on_pins = sd_arr->en_pins[sd_arr->active_pin_i];
   for (size_t i = 0; i < size; i++)
     all_pins |= sd_arr->en_pins[i];
 
   HAL_GPIO_WritePin(sd_arr->en_port, all_pins & ~on_pins, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(sd_arr->en_port, on_pins, GPIO_PIN_RESET);
 
   segment_display_show_num(&sd_arr->sd, digits[sd_arr->active_pin_i]);
 
@@ -43,4 +42,7 @@ void segment_display_array_show(segment_display_array_t *sd_arr,
     sd_arr->active_pin_i %= size;
     software_timer_reset(sd_arr->timer_i, sd_arr->t_timer);
   }
+
+  HAL_GPIO_WritePin(sd_arr->en_port, on_pins,
+                    GPIO_PIN_RESET);
 }
