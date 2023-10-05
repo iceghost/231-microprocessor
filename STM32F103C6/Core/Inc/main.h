@@ -57,30 +57,26 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define HAND_0_Pin GPIO_PIN_4
-#define HAND_0_GPIO_Port GPIOA
-#define HAND_1_Pin GPIO_PIN_5
-#define HAND_1_GPIO_Port GPIOA
-#define HAND_2_Pin GPIO_PIN_6
-#define HAND_2_GPIO_Port GPIOA
-#define HAND_3_Pin GPIO_PIN_7
-#define HAND_3_GPIO_Port GPIOA
-#define HAND_4_Pin GPIO_PIN_8
-#define HAND_4_GPIO_Port GPIOA
-#define HAND_5_Pin GPIO_PIN_9
-#define HAND_5_GPIO_Port GPIOA
-#define HAND_6_Pin GPIO_PIN_10
-#define HAND_6_GPIO_Port GPIOA
-#define HAND_7_Pin GPIO_PIN_11
-#define HAND_7_GPIO_Port GPIOA
-#define HAND_8_Pin GPIO_PIN_12
-#define HAND_8_GPIO_Port GPIOA
-#define HAND_9_Pin GPIO_PIN_13
-#define HAND_9_GPIO_Port GPIOA
-#define HAND_10_Pin GPIO_PIN_14
-#define HAND_10_GPIO_Port GPIOA
-#define HAND_11_Pin GPIO_PIN_15
-#define HAND_11_GPIO_Port GPIOA
+#define LED_STS_Pin GPIO_PIN_5
+#define LED_STS_GPIO_Port GPIOA
+#define EN0_Pin GPIO_PIN_6
+#define EN0_GPIO_Port GPIOA
+#define EN1_Pin GPIO_PIN_7
+#define EN1_GPIO_Port GPIOA
+#define SEG_A_Pin GPIO_PIN_0
+#define SEG_A_GPIO_Port GPIOB
+#define SEG_B_Pin GPIO_PIN_1
+#define SEG_B_GPIO_Port GPIOB
+#define SEG_C_Pin GPIO_PIN_2
+#define SEG_C_GPIO_Port GPIOB
+#define SEG_D_Pin GPIO_PIN_3
+#define SEG_D_GPIO_Port GPIOB
+#define SEG_E_Pin GPIO_PIN_4
+#define SEG_E_GPIO_Port GPIOB
+#define SEG_F_Pin GPIO_PIN_5
+#define SEG_F_GPIO_Port GPIOB
+#define SEG_G_Pin GPIO_PIN_6
+#define SEG_G_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 #define SOFTWARE_TIMERS_COUNT 1

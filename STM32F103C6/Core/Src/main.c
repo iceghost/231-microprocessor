@@ -89,45 +89,12 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  uint16_t pins[12] = {
-      HAND_0_Pin, HAND_1_Pin, HAND_2_Pin, HAND_3_Pin, HAND_4_Pin,  HAND_5_Pin,
-      HAND_6_Pin, HAND_7_Pin, HAND_8_Pin, HAND_9_Pin, HAND_10_Pin, HAND_11_Pin,
-  };
-  uint16_t all_pins = 0;
-  for (size_t i = 0; i < 12; i++) {
-    all_pins |= pins[i];
-  }
-
-  uint8_t second = 0;
-  uint8_t minute = 0;
-  uint8_t hour = 0;
-  /* second hand moves every 5s */
-  software_timer_reset(0, 5000);
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
-    uint16_t on_pins = pins[second] | pins[minute] | pins[hour];
-    HAL_GPIO_WritePin(GPIOA, all_pins & ~on_pins, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(GPIOA, on_pins, GPIO_PIN_RESET);
-
-    if (software_timer_flags[0]) {
-
-      second += 1;
-      if (second == 12) {
-        second = 0;
-        minute += 1;
-      }
-      if (minute == 12) {
-        minute = 0;
-        hour += 1;
-      }
-      if (hour == 12)
-        hour = 0;
-
-      software_timer_reset(0, 5000);
-    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -234,20 +201,27 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, HAND_0_Pin|HAND_1_Pin|HAND_2_Pin|HAND_3_Pin
-                          |HAND_4_Pin|HAND_5_Pin|HAND_6_Pin|HAND_7_Pin
-                          |HAND_8_Pin|HAND_9_Pin|HAND_10_Pin|HAND_11_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED_STS_Pin|EN0_Pin|EN1_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : HAND_0_Pin HAND_1_Pin HAND_2_Pin HAND_3_Pin
-                           HAND_4_Pin HAND_5_Pin HAND_6_Pin HAND_7_Pin
-                           HAND_8_Pin HAND_9_Pin HAND_10_Pin HAND_11_Pin */
-  GPIO_InitStruct.Pin = HAND_0_Pin|HAND_1_Pin|HAND_2_Pin|HAND_3_Pin
-                          |HAND_4_Pin|HAND_5_Pin|HAND_6_Pin|HAND_7_Pin
-                          |HAND_8_Pin|HAND_9_Pin|HAND_10_Pin|HAND_11_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, SEG_A_Pin|SEG_B_Pin|SEG_C_Pin|SEG_D_Pin
+                          |SEG_E_Pin|SEG_F_Pin|SEG_G_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : LED_STS_Pin EN0_Pin EN1_Pin */
+  GPIO_InitStruct.Pin = LED_STS_Pin|EN0_Pin|EN1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : SEG_A_Pin SEG_B_Pin SEG_C_Pin SEG_D_Pin
+                           SEG_E_Pin SEG_F_Pin SEG_G_Pin */
+  GPIO_InitStruct.Pin = SEG_A_Pin|SEG_B_Pin|SEG_C_Pin|SEG_D_Pin
+                          |SEG_E_Pin|SEG_F_Pin|SEG_G_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB7 */
   GPIO_InitStruct.Pin = GPIO_PIN_7;
