@@ -3,6 +3,8 @@
 
 #include "main.h"
 
+#include "software_timer.h"
+
 #ifndef MAX_SEGMENT_DISPLAY_ARRAY_SIZE
 #define MAX_SEGMENT_DISPLAY_ARRAY_SIZE 10
 #endif
@@ -17,8 +19,7 @@ typedef struct {
   GPIO_TypeDef *en_port;
   uint16_t en_pins[MAX_SEGMENT_DISPLAY_ARRAY_SIZE];
   size_t active_pin_i;
-  size_t timer_i;
-  uint32_t t_timer;
+  software_timer_handle_t ti;
 } segment_display_array_t;
 
 #define INIT_SEGMENT_DISPLAY(name, init_port, prefix)                          \

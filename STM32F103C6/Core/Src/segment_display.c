@@ -37,10 +37,9 @@ void segment_display_array_show(segment_display_array_t *sd_arr,
 
   segment_display_show_num(&sd_arr->sd, digits[sd_arr->active_pin_i]);
 
-  if (software_timer_flags[sd_arr->timer_i]) {
+  IF_SOFTWARE_TIMER_ITEM_FLAGGED(&sd_arr->ti) {
     sd_arr->active_pin_i += 1;
     sd_arr->active_pin_i %= size;
-    software_timer_reset(sd_arr->timer_i, sd_arr->t_timer);
   }
 
   HAL_GPIO_WritePin(sd_arr->en_port, on_pins,
