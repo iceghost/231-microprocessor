@@ -90,53 +90,31 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  segment_display_t sd = {.port = GPIOB};
-  INIT_SEGMENT_DISPLAY_PINS(sd, SEG);
+  segment_display_array_t sd_arr;
+  INIT_SEGMENT_DISPLAY(sd_arr.sd, GPIOB, SEG);
+  sd_arr.en_port = GPIOA;
+  sd_arr.en_pins[0] = EN0_Pin;
+  sd_arr.en_pins[1] = EN1_Pin;
+  sd_arr.en_pins[2] = EN2_Pin;
+  sd_arr.en_pins[3] = EN3_Pin;
+  sd_arr.active_pin_i = 0;
+  sd_arr.timer_i = TIMER_I_SEGMENT_DISPLAY_ARRAY;
+  sd_arr.t_timer = 500;
 
-  uint16_t en_pins[] = {EN0_Pin, EN1_Pin, EN2_Pin, EN3_Pin};
-  const uint16_t en_pins_count = 4;
-  uint16_t en_pins_mask = 0;
-  for (size_t i = 0; i < en_pins_count; i++)
-    en_pins_mask |= en_pins[i];
-
-  uint8_t active_pin_i = 0;
-
-  software_timer_reset(0, 1000);
-  software_timer_reset(1, 500);
+  software_timer_reset(TIMER_I_1HZ, 1000);
+  software_timer_reset(sd_arr.timer_i, sd_arr.t_timer);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
-    HAL_GPIO_WritePin(GPIOA, en_pins_mask & ~en_pins[active_pin_i],
-                      GPIO_PIN_SET);
-    HAL_GPIO_WritePin(GPIOA, en_pins[active_pin_i], GPIO_PIN_RESET);
-
-    switch (active_pin_i) {
-    case 0:
-      segment_display_show_num(&sd, 1);
-      break;
-    case 1:
-      segment_display_show_num(&sd, 2);
-      break;
-    case 2:
-      segment_display_show_num(&sd, 3);
-      break;
-    case 3:
-      segment_display_show_num(&sd, 0);
-      break;
-    }
+    uint8_t digits[] = {1, 2, 3, 0};
+    segment_display_array_show(&sd_arr, digits, sizeof(digits));
 
     if (software_timer_flags[0]) {
       HAL_GPIO_TogglePin(GPIOA, LED_STS_Pin);
       HAL_GPIO_TogglePin(GPIOA, DOT_Pin);
       software_timer_reset(0, 1000);
-    }
-
-    if (software_timer_flags[1]) {
-      active_pin_i += 1;
-      active_pin_i %= en_pins_count;
-      software_timer_reset(1, 500);
     }
     /* USER CODE END WHILE */
 
