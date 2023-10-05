@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "segment_display.h"
 #include "software_timer.h"
 /* USER CODE END Includes */
 
@@ -89,15 +90,30 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  software_timer_handle_t ti = {0, 1000};
-  software_timer_item_reset(&ti);
+  software_timer_handle_t ti_1hz = {TIMER_I_1HZ, 1000};
+  software_timer_item_reset(&ti_1hz);
+
+  segment_display_array_t sd_arr = {0};
+  INIT_SEGMENT_DISPLAY(sd_arr.sd, GPIOB, SEG);
+  sd_arr.en_port = GPIOA;
+  sd_arr.en_pins[0] = EN0_Pin;
+  sd_arr.en_pins[1] = EN1_Pin;
+  sd_arr.ti.index = TIMER_I_SEGMENT_DISPLAY;
+  sd_arr.ti.interval = 10;
+  software_timer_item_reset(&sd_arr.ti);
+
+  int count = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    IF_SOFTWARE_TIMER_ITEM_FLAGGED(&ti) {
+    uint8_t digits[] = {count / 10, count % 10};
+    segment_display_array_show(&sd_arr, digits, sizeof(digits));
+    IF_SOFTWARE_TIMER_ITEM_FLAGGED(&ti_1hz) {
+      count += 1;
+      count %= 100;
       HAL_GPIO_TogglePin(GPIOA, LED_STS_Pin);
     }
     /* USER CODE END WHILE */

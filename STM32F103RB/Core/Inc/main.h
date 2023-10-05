@@ -32,6 +32,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
+#include <stdint.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -79,7 +80,12 @@ void Error_Handler(void);
 #define SEG_G_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-#define SOFTWARE_TIMERS_COUNT 1
+enum {
+  TIMER_I_1HZ = 0,
+  TIMER_I_SEGMENT_DISPLAY,
+  TIMER_I_MAX,
+};
+#define SOFTWARE_TIMERS_COUNT TIMER_I_MAX
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
