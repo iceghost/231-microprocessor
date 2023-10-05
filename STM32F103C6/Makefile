@@ -56,6 +56,7 @@ Core/Src/system_stm32f1xx.c \
 ../Lib/Src/software_timer.c \
 ../Lib/Src/segment_display.c \
 ../Lib/Src/matrix_display.c \
+../Lib/Src/font8x8_basic.c
 
 # ASM sources
 ASM_SOURCES =  \
