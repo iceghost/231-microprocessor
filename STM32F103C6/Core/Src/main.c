@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "segment_display.h"
 #include "software_timer.h"
 /* USER CODE END Includes */
 
@@ -89,12 +90,47 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  
+  segment_display_t sd = {.port = GPIOB};
+  INIT_SEGMENT_DISPLAY_PINS(sd, SEG);
+
+  uint16_t en_pins[] = {EN0_Pin, EN1_Pin};
+  const uint16_t en_pins_count = 2;
+  uint16_t en_pins_mask = 0;
+  for (size_t i = 0; i < en_pins_count; i++)
+    en_pins_mask |= en_pins[i];
+
+  uint8_t active_pin_i = 0;
+
+  software_timer_reset(0, 1000);
+  software_timer_reset(1, 500);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
+    HAL_GPIO_WritePin(GPIOA, en_pins_mask & ~en_pins[active_pin_i],
+                      GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOA, en_pins[active_pin_i], GPIO_PIN_RESET);
+
+    switch (active_pin_i) {
+    case 0:
+      segment_display_show_num(&sd, 1);
+      break;
+    case 1:
+      segment_display_show_num(&sd, 2);
+      break;
+    }
+
+    if (software_timer_flags[0]) {
+      HAL_GPIO_TogglePin(GPIOA, LED_STS_Pin);
+      software_timer_reset(0, 1000);
+    }
+
+    if (software_timer_flags[1]) {
+      active_pin_i += 1;
+      active_pin_i %= en_pins_count;
+      software_timer_reset(1, 500);
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
