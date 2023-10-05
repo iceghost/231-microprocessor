@@ -98,11 +98,11 @@ int main(void)
   sd_arr.en_pins[2] = EN2_Pin;
   sd_arr.en_pins[3] = EN3_Pin;
   sd_arr.active_pin_i = 0;
-  sd_arr.timer_i = TIMER_I_SEGMENT_DISPLAY_ARRAY;
-  sd_arr.t_timer = 250;
+  sd_arr.ti.index = TIMER_I_SEGMENT_DISPLAY_ARRAY;
+  sd_arr.ti.interval = 250;
 
   software_timer_reset(TIMER_I_1HZ, 1000);
-  software_timer_reset(sd_arr.timer_i, sd_arr.t_timer);
+  software_timer_item_reset(&sd_arr.ti);
   /* USER CODE END 2 */
 
   /* Infinite loop */
