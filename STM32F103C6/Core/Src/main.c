@@ -93,8 +93,8 @@ int main(void)
   segment_display_t sd = {.port = GPIOB};
   INIT_SEGMENT_DISPLAY_PINS(sd, SEG);
 
-  uint16_t en_pins[] = {EN0_Pin, EN1_Pin};
-  const uint16_t en_pins_count = 2;
+  uint16_t en_pins[] = {EN0_Pin, EN1_Pin, EN2_Pin, EN3_Pin};
+  const uint16_t en_pins_count = 4;
   uint16_t en_pins_mask = 0;
   for (size_t i = 0; i < en_pins_count; i++)
     en_pins_mask |= en_pins[i];
@@ -119,10 +119,17 @@ int main(void)
     case 1:
       segment_display_show_num(&sd, 2);
       break;
+    case 2:
+      segment_display_show_num(&sd, 3);
+      break;
+    case 3:
+      segment_display_show_num(&sd, 0);
+      break;
     }
 
     if (software_timer_flags[0]) {
       HAL_GPIO_TogglePin(GPIOA, LED_STS_Pin);
+      HAL_GPIO_TogglePin(GPIOA, DOT_Pin);
       software_timer_reset(0, 1000);
     }
 
