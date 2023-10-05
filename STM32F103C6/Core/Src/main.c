@@ -21,6 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "font8x8_basic.h"
+#include "matrix_display.h"
 #include "software_timer.h"
 /* USER CODE END Includes */
 
@@ -89,12 +91,34 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  
+  matrix_display_t md = {0};
+  md.en_port = GPIOA;
+  md.en_pins[0] = ENM0_Pin;
+  md.en_pins[1] = ENM1_Pin;
+  md.en_pins[2] = ENM2_Pin;
+  md.en_pins[3] = ENM3_Pin;
+  md.en_pins[4] = ENM4_Pin;
+  md.en_pins[5] = ENM5_Pin;
+  md.en_pins[6] = ENM6_Pin;
+  md.en_pins[7] = ENM7_Pin;
+  md.row_port = GPIOB;
+  md.row_pins[0] = ROW0_Pin;
+  md.row_pins[1] = ROW1_Pin;
+  md.row_pins[2] = ROW2_Pin;
+  md.row_pins[3] = ROW3_Pin;
+  md.row_pins[4] = ROW4_Pin;
+  md.row_pins[5] = ROW5_Pin;
+  md.row_pins[6] = ROW6_Pin;
+  md.row_pins[7] = ROW7_Pin;
+  md.ti.index = TIMER_I_MATRIX;
+  md.ti.interval = 50;
+  software_timer_item_reset(&md.ti);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
+    matrix_display_show(&md, font8x8_basic['A']);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

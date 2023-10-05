@@ -120,6 +120,7 @@ void Error_Handler(void);
 enum {
   TIMER_I_1HZ = 0,
   TIMER_I_SEGMENT_DISPLAY_ARRAY,
+  TIMER_I_MATRIX,
   TIMER_I_MAX,
 };
 #define SOFTWARE_TIMERS_COUNT TIMER_I_MAX
