@@ -112,13 +112,18 @@ int main(void)
   md.row_pins[7] = ROW7_Pin;
   md.ti.index = TIMER_I_MATRIX;
   md.ti.interval = 50;
+  md.animate_ti.index = TIMER_I_MATRIX_ANIMATE;
+  md.animate_ti.interval = 800;
   software_timer_item_reset(&md.ti);
+  software_timer_item_reset(&md.animate_ti);
+
+  matrix_display_state_t state = {0};
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
-    matrix_display_show(&md, font8x8_basic['A']);
+    matrix_display_animate(&md, "hello world", sizeof("hello world"), &state);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
