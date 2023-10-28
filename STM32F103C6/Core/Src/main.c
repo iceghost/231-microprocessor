@@ -103,19 +103,37 @@ int main(void)
 
   software_timer_reset(TIMER_I_1HZ, 1000);
   software_timer_item_reset(&sd_arr.ti);
+
+  int hour = 15;
+  int minute = 8;
+  int second = 50;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
-    uint8_t digits[] = {1, 2, 3, 0};
+    uint8_t digits[] = {hour / 10, hour % 10, minute / 10, minute % 10};
     segment_display_array_show(&sd_arr, digits, sizeof(digits));
 
     if (software_timer_flags[0]) {
       HAL_GPIO_TogglePin(GPIOA, LED_STS_Pin);
       HAL_GPIO_TogglePin(GPIOA, DOT_Pin);
+
+      second += 1;
+      if (second == 60) {
+        second = 0;
+        minute += 1;
+      }
+      if (minute == 60) {
+        minute = 0;
+        hour += 1;
+      }
+      if (hour == 24)
+        hour = 0;
+
       software_timer_reset(0, 1000);
     }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
