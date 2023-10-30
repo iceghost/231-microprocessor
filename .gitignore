@@ -1,4 +1,9 @@
-**/build/
-**/*.pdsbak
-**/*.pdsprj.*
 **/.cache
+
+*/build/
+*/*.pdsbak
+*/*.pdsprj.*
+*/compile_commands.json
+
+# clangd config contains machine-specific paths
+.clangd
