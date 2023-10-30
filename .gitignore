@@ -5,6 +5,3 @@
 */*.pdsprj.*
 */compile_commands.json
 */.mxproject
-
-# clangd config contains machine-specific paths
-.clangd
