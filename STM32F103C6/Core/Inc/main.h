@@ -57,6 +57,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define BUTTON_Pin GPIO_PIN_1
+#define BUTTON_GPIO_Port GPIOA
+#define LED_STS_Pin GPIO_PIN_2
+#define LED_STS_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 enum {
