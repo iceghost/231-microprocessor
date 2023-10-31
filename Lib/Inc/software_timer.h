@@ -1,29 +1,32 @@
 #ifndef __SOFTWARE_TIMER_H
 #define __SOFTWARE_TIMER_H
 
-#include "main.h"
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
-#ifndef SOFTWARE_TIMERS_COUNT
-#define SOFTWARE_TIMERS_COUNT 0 
-#endif
+extern uint32_t software_timer_tick;
 
 typedef struct {
-  size_t index;
+  uint32_t start;
   uint32_t interval;
-} software_timer_handle_t;
+  bool flag;
+} software_timer_t;
 
-extern uint32_t software_timer_counts[SOFTWARE_TIMERS_COUNT];
-extern bool software_timer_flags[SOFTWARE_TIMERS_COUNT];
-
-inline void software_timer_reset(size_t i, uint32_t count) {
-  software_timer_counts[i] = count;
-  software_timer_flags[i] = false;
+inline void software_timer_init(software_timer_t *st, uint32_t interval) {
+  st->interval = interval;
+  st->start = software_timer_tick;
+  st->flag = false;
 }
 
-inline void software_timer_item_reset(software_timer_handle_t *ti) {
-  software_timer_reset(ti->index, ti->interval);
+void software_timers_start(software_timer_t *sts, size_t count);
+
+inline void software_timer_reset(software_timer_t *st) {
+  st->start = software_timer_tick;
+  st->flag = false;
 }
-#define IF_SOFTWARE_TIMER_ITEM_FLAGGED(ti)                                     \
-  for (; software_timer_flags[(ti)->index]; software_timer_item_reset(ti))
+
+#define software_timer_if_flagged(st)                                          \
+  for (; (st)->flag; software_timer_reset(st))
 
 #endif
