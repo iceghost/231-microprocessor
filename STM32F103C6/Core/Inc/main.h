@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdbool.h>
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -63,14 +63,7 @@ void Error_Handler(void);
 #define LED_STS_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
-enum {
-  TIMER_I_1HZ = 0,
-  TIMER_I_SEGMENT_DISPLAY_ARRAY,
-  TIMER_I_MATRIX,
-  TIMER_I_MATRIX_ANIMATE,
-  TIMER_I_MAX,
-};
-#define SOFTWARE_TIMERS_COUNT TIMER_I_MAX
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

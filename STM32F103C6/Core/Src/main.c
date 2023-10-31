@@ -21,9 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "font8x8_basic.h"
-#include "matrix_display.h"
-#include "software_timer.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -181,7 +179,7 @@ static void MX_TIM2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM2_Init 2 */
-  HAL_TIM_Base_Start_IT(&htim2);
+
   /* USER CODE END TIM2_Init 2 */
 
 }
