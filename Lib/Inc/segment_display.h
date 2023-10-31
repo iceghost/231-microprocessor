@@ -1,41 +1,47 @@
 #ifndef __SEGMENT_DISPLAY_H
 #define __SEGMENT_DISPLAY_H
 
-#include "main.h"
-
-#include "software_timer.h"
-
-#ifndef MAX_SEGMENT_DISPLAY_ARRAY_SIZE
-#define MAX_SEGMENT_DISPLAY_ARRAY_SIZE 10
-#endif
+#include "gpio_array.h"
+#include "stm32f1xx_hal.h" // IWYU pragma: keep
+#include <stdbool.h>
+#include <string.h>
 
 typedef struct {
-  GPIO_TypeDef *port;
-  uint16_t pins[7];
+  gpio_array_t gpios;
+  uint16_t digit_to_gpios[10];
 } segment_display_t;
 
 typedef struct {
   segment_display_t sd;
-  GPIO_TypeDef *en_port;
-  uint16_t en_pins[MAX_SEGMENT_DISPLAY_ARRAY_SIZE];
-  size_t active_pin_i;
-  software_timer_handle_t ti;
+  gpio_array_t en_gpios;
+  size_t pos;
 } segment_display_array_t;
 
-#define INIT_SEGMENT_DISPLAY(name, init_port, prefix)                          \
-  do {                                                                         \
-    name.port = init_port;                                                     \
-    name.pins[0] = prefix##_A_Pin;                                             \
-    name.pins[1] = prefix##_B_Pin;                                             \
-    name.pins[2] = prefix##_C_Pin;                                             \
-    name.pins[3] = prefix##_D_Pin;                                             \
-    name.pins[4] = prefix##_E_Pin;                                             \
-    name.pins[5] = prefix##_F_Pin;                                             \
-    name.pins[6] = prefix##_G_Pin;                                             \
-  } while (0)
+void segment_display_init(segment_display_t *sd, GPIO_TypeDef *port,
+                          uint16_t *pins) {
+  gpio_array_init(&sd->gpios, port, pins, 7);
+  memset(sd->digit_to_gpios, 0, 20);
 
-void segment_display_show_num(segment_display_t *sd, uint8_t num);
+  static bool segment_states[10][7] = {
+      {1, 1, 1, 1, 1, 1, 0}, /* */
+      {0, 1, 1, 0, 0, 0, 0}, /* */
+      {1, 1, 0, 1, 1, 0, 1}, /* */
+      {1, 1, 1, 1, 0, 0, 1}, /* */
+      {0, 1, 1, 0, 0, 1, 1}, /* */
+      {1, 0, 1, 1, 0, 1, 1}, /* */
+      {1, 0, 1, 1, 1, 1, 1}, /* */
+      {1, 1, 1, 0, 0, 0, 0}, /* */
+      {1, 1, 1, 1, 1, 1, 1}, /* */
+      {1, 1, 1, 1, 0, 1, 1}, /* */
+  };
+  for (uint8_t num = 0; num < 10; num++)
+    for (uint8_t i = 0; i < 7; i++)
+      if (segment_states[num][i])
+        sd->digit_to_gpios[num] |= sd->gpios.pins[i];
+}
+void segment_display_show(segment_display_t *sd, uint8_t num);
+void segment_display_array_tick(segment_display_array_t *sda);
 void segment_display_array_show(segment_display_array_t *sd_arr,
-                                uint8_t *digits, size_t size);
+                                uint8_t *digits);
 
 #endif
