@@ -1,5 +1,6 @@
 -DUSE_HAL_DRIVER
 -ILib/Inc
+-ICore/Inc
 -ISTM32CubeF1/Drivers/STM32F1xx_HAL_Driver/Inc
 -ISTM32CubeF1/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy
 -ISTM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Include
