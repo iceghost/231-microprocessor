@@ -15,5 +15,11 @@ void button_tick(button_t *b) {
   if (current_tick - b->stable_tick < b->debounce_threshold)
     return;
 
-  b->known = b->current;
+  if (b->known != b->current) {
+    if (b->known == GPIO_PIN_SET)
+      b->is_pressed = true;
+    else
+      b->is_released = true;
+    b->known = b->current;
+  }
 }
