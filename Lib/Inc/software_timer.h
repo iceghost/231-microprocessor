@@ -6,12 +6,15 @@
 #include <stdint.h>
 
 extern uint32_t software_timer_tick;
+extern uint32_t software_timer_ticks_per_second;
 
 typedef struct {
   uint32_t start;
   uint32_t interval;
   bool flag;
 } software_timer_t;
+
+void software_timers_init();
 
 inline void software_timer_init(software_timer_t *st, uint32_t interval) {
   st->interval = interval;

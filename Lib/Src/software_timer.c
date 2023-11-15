@@ -1,11 +1,21 @@
 #include "software_timer.h"
 #include "stm32f1xx_hal.h" // IWYU pragma: keep
 
+#define BASE_CLK 64000000
+
 extern TIM_HandleTypeDef htim2;
 static software_timer_t *software_timers;
 static size_t software_timers_count;
 
-uint32_t software_timer_tick = 0;
+uint32_t software_timer_tick;
+uint32_t software_timer_ticks_per_second;
+
+void software_timers_init() {
+  software_timer_tick = 0;
+  software_timer_ticks_per_second = BASE_CLK;
+  software_timer_ticks_per_second /= htim2.Init.Prescaler + 1;
+  software_timer_ticks_per_second /= htim2.Init.Period + 1;
+}
 
 void software_timers_start(software_timer_t *sts, size_t count) {
   software_timers = sts;
