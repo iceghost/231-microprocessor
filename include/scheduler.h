@@ -4,24 +4,30 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct {
-	// Pointer to the task
-	void (*callback)(void);
-	// Delay (ticks) until the function will (next) be run
+typedef struct scheduler_task {
 	uint32_t delay;
-	// Interval (ticks) between subsequent runs
 	uint32_t period;
-	// Incremented (by scheduler) when task is due to execute
-	uint8_t run_me;
-	uint32_t task_id;
+	uint8_t due_runs;
+
+	void (*callback)(void *);
+	void *data;
+
+	struct scheduler_task *next;
 } scheduler_task_t;
 
-#define SCHEDULER_MAX_TASKS 40
+typedef struct {
+	scheduler_task_t *head;
+	scheduler_task_t *due_oneshot_head;
+} scheduler_t;
 
-extern scheduler_task_t scheduler_tasks[SCHEDULER_MAX_TASKS];
+extern scheduler_t GLOBAL_SCHEDULER;
 
-bool scheduler_add_task(void (*ptask)(void), uint16_t delay, uint16_t period);
-void scheduler_update(void);
-bool scheduler_dispatch(void);
+void scheduler_init();
+void scheduler_tick();
+void scheduler_update();
+
+void scheduler_task_init(scheduler_task_t *task, uint32_t delay, bool oneshot,
+			 void (*callback)(void *), void *data);
+void scheduler_add_task(scheduler_task_t *task);
 
 #endif

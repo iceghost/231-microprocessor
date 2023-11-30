@@ -1,62 +1,104 @@
 #include "scheduler.h"
 #include <stddef.h>
 
-scheduler_task_t scheduler_tasks[SCHEDULER_MAX_TASKS];
+scheduler_t GLOBAL_SCHEDULER;
 
-bool sch_delete_task(uint16_t id);
-
-bool sch_add_task(void (*callback)(), uint16_t delay, uint16_t period)
+void scheduler_init()
 {
-	uint16_t i = 0;
-
-	while (i < SCHEDULER_MAX_TASKS && scheduler_tasks[i].callback) {
-		i++;
-	}
-	if (i == SCHEDULER_MAX_TASKS)
-		return 0;
-
-	scheduler_tasks[i].callback = callback;
-	scheduler_tasks[i].delay = delay;
-	scheduler_tasks[i].period = period;
-	scheduler_tasks[i].run_me = 0;
-
-	return 1;
+	GLOBAL_SCHEDULER.head = NULL;
+	GLOBAL_SCHEDULER.due_oneshot_head = NULL;
 }
 
-void sch_update(void)
+static void scheduler_dispatch()
 {
-	for (uint16_t i = 0; i < SCHEDULER_MAX_TASKS; i++) {
-		if (!scheduler_tasks[i].callback)
-			continue;
+	scheduler_task_t *tk = GLOBAL_SCHEDULER.head;
+	while (tk) {
+		if (tk->due_runs) {
+			tk->due_runs--;
+			tk->callback(tk->data);
+		}
+		tk = tk->next;
+	}
 
-		if (scheduler_tasks[i].delay > 0) {
-			scheduler_tasks[i].delay--;
-			continue;
+	while ((tk = GLOBAL_SCHEDULER.due_oneshot_head)) {
+		tk->callback(tk->data);
+		GLOBAL_SCHEDULER.due_oneshot_head = tk->next;
+	}
+}
+
+void scheduler_update()
+{
+	scheduler_dispatch();
+}
+
+void scheduler_tick()
+{
+	scheduler_task_t *tk = GLOBAL_SCHEDULER.head;
+	if (!tk)
+		return;
+
+	if (tk->delay > 0) {
+		tk->delay--;
+	}
+
+	scheduler_task_t *due_list = NULL;
+
+	while (tk && tk->delay == 0) {
+		tk->due_runs++;
+
+		// pop from scheduler
+		GLOBAL_SCHEDULER.head = tk->next;
+		// push to due list if interval
+		if (tk->period) {
+			tk->delay = tk->period;
+			tk->next = due_list;
+			due_list = tk;
+		} else {
+			tk->next = GLOBAL_SCHEDULER.due_oneshot_head;
+			GLOBAL_SCHEDULER.due_oneshot_head = tk;
 		}
 
-		scheduler_tasks[i].run_me++;
+		tk = GLOBAL_SCHEDULER.head;
+	}
 
-		if (scheduler_tasks[i].period)
-			scheduler_tasks[i].delay = scheduler_tasks[i].period;
+	while (due_list) {
+		scheduler_task_t *next = due_list->next;
+		scheduler_add_task(due_list);
+		due_list = next;
 	}
 }
 
-void sch_dispatch(void)
+void scheduler_add_task(scheduler_task_t *task)
 {
-	for (uint8_t i = 0; i < SCHEDULER_MAX_TASKS; i++) {
-		if (scheduler_tasks[i].run_me && scheduler_tasks[i].callback) {
-			scheduler_tasks[i].callback();
-			scheduler_tasks[i].run_me--;
-			if (scheduler_tasks[i].period == 0)
-				sch_delete_task(i);
+	scheduler_task_t **head_link = &GLOBAL_SCHEDULER.head;
+
+	while (true) {
+		scheduler_task_t *head = *head_link;
+		if (!head) {
+			*head_link = task;
+			task->next = NULL;
+			return;
 		}
+
+		if (task->delay <= head->delay) {
+			head->delay -= task->delay;
+			task->next = head;
+			*head_link = task;
+			return;
+		}
+
+		task->delay -= head->delay;
+		head_link = &head->next;
 	}
 }
 
-bool sch_delete_task(uint16_t id)
+void scheduler_task_init(scheduler_task_t *task, uint32_t delay, bool oneshot,
+			 void (*callback)(void *), void *data)
 {
-	if (id >= SCHEDULER_MAX_TASKS)
-		return 0;
-	scheduler_tasks[id].callback = NULL;
-	return 1;
+	task->delay = delay;
+	task->period = oneshot ? 0 : delay;
+	task->callback = callback;
+	task->data = data;
+	task->due_runs = 0;
+	task->next = NULL;
 }
