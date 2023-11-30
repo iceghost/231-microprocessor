@@ -36,8 +36,9 @@ BUILD_DIR = build
 ######################################
 # Project sources
 PROJ_SOURCES = \
-src/scheduler_demo.c \
+src/$(DEMO).c \
 src/scheduler.c \
+src/button.c \
 
 # C sources
 C_SOURCES = $(PROJ_SOURCES) \

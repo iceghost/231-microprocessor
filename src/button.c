@@ -6,6 +6,9 @@ void button_init(button_t *b, GPIO_TypeDef *port, uint16_t pin)
 	memset(b, 0, sizeof(*b));
 	b->port = port;
 	b->pin = pin;
+	b->reading = GPIO_PIN_SET;
+	b->prev = GPIO_PIN_SET;
+	b->current = GPIO_PIN_SET;
 }
 
 void button_read(button_t *b)
@@ -29,6 +32,9 @@ void button_tick(button_t *b)
 
 void button_update(button_t *b)
 {
+	if (b->stable_ticks < DEBOUNCE_THRESHOLD)
+		return;
+
 	if (b->prev != b->current) {
 		if (b->prev == GPIO_PIN_SET)
 			b->is_pressed = true;
