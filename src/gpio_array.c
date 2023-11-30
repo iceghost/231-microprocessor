@@ -14,23 +14,7 @@ void gpio_array_init(gpio_array_t *ga, GPIO_TypeDef *port, uint16_t *pins,
 		ga->mask |= ga->pins[i];
 }
 
-void gpio_array_set(gpio_array_t *ga, uint16_t gpios)
-{
-	ga->set_mask |= gpios;
-}
-
-void gpio_array_reset(gpio_array_t *ga, uint16_t gpios)
-{
-	ga->set_mask &= ~gpios;
-}
-
-void gpio_array_set_only(gpio_array_t *ga, uint16_t gpios)
-{
-	gpio_array_reset(ga, gpios);
-	gpio_array_set(ga, ga->mask & ~gpios);
-}
-
-void gpio_array_update(gpio_array_t *ga)
+void gpio_array_write(gpio_array_t *ga)
 {
 	HAL_GPIO_WritePin(ga->port, ga->set_mask, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(ga->port, ga->mask & ~ga->set_mask, GPIO_PIN_RESET);
