@@ -14,4 +14,14 @@ macro reset
 
 runMacro $reset
 
-s
+# Feed ADC1 value to 12 when read
+# 50000 samples last for around 5 seconds
+sysbus.adc1 FeedSample 12 0 50000
+# Same as above
+sysbus.adc1 FeedSample 420 0 50000
+sysbus.adc1 FeedSample 69 0 50000
+sysbus.adc1 FeedSample 2 0 50000
+sysbus.adc1 FeedSample 8 0 50000
+sysbus.adc1 FeedSample 666 0 50000
+
+start
