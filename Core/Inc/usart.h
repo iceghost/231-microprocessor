@@ -35,14 +35,19 @@ extern "C" {
 extern UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN Private defines */
-uint8_t uart2_read_buf[1024];
+enum {
+  UART_OK = 0,
+  UART_BUFFER_NOT_READY,
+  UART_DEST_TOO_SMALL,
+};
 /* USER CODE END Private defines */
 
 void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-bool uart2_available(void);
-char uart2_getchar(void);
+void uart2_init(void);
+int uart2_read(uint8_t *dest, size_t size, size_t *read_len);
+int uart2_write(uint8_t *buf, size_t size);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
