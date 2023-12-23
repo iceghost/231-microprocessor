@@ -84,13 +84,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   /* USER CODE BEGIN 2 */
-
+  init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    update();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
