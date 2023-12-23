@@ -25,8 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <assert.h>
-#include <string.h>
+#include "lab5.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,19 +92,13 @@ int main(void)
   MX_TIM2_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t buf[1024];
-  size_t len;
-  uart2_init();
+  lab5_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
-    if (uart2_read(buf, sizeof(buf) - 1, &len) == UART_OK) {
-      buf[len] = '\0';
-      if (strcmp((void *)buf, "RST")) {
-      }
-    }
+    lab5_update();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

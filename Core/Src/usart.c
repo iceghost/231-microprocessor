@@ -21,8 +21,13 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#include "stm32f4xx_hal_uart.h"
 #include <assert.h>
-#include <string.h>
+
+bool uart2_rx_done = false;
+uint8_t uart2_buf[1024];
+size_t uart2_buf_pos = 0;
+uint8_t tmp;
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart2;
@@ -50,7 +55,7 @@ void MX_USART2_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART2_Init 2 */
-
+  HAL_UART_Receive_IT(&huart2, &tmp, 1);
   /* USER CODE END USART2_Init 2 */
 }
 
@@ -109,81 +114,18 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
-uint8_t temp;
-uint8_t buf[2][1024];
-uint8_t write_buf = 0;
-size_t read_buf_size = 0;
-size_t pos = 0;
-
-enum {
-  HASH,
-  BANG,
-} expecting_char = BANG;
-
-void uart2_init(void)
-{
-  HAL_UART_Receive_IT(&huart2, &temp, 1);
-}
-
-int uart2_read(uint8_t *dest, size_t size, size_t *read_len)
-{
-  if (read_buf_size == 0)
-    return UART_BUFFER_NOT_READY;
-
-  *read_len = read_buf_size;
-
-  if (read_buf_size > size)
-    return UART_DEST_TOO_SMALL;
-
-  memcpy(dest, buf[write_buf ^ 1], read_buf_size);
-  read_buf_size = 0;
-
-  return UART_OK;
-}
-
-int uart2_write(uint8_t *buf, size_t size)
-{
-  HAL_UART_Transmit(&huart2, buf, size, 50);
-
-  return UART_OK;
-}
-
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-  uart2_write(&temp, 1);
-
   assert(huart == &huart2);
 
-  switch (expecting_char) {
-  case BANG:
-    /* wait for start of new command */
-    if (temp == '!') {
-      expecting_char = HASH;
-      pos = 0;
-      break;
-    }
+  /* send and literally ignore */
+  HAL_UART_Transmit_IT(&huart2, &tmp, 1);
 
-    break;
+  uart2_rx_done = true;
+  uart2_buf[uart2_buf_pos++] = tmp;
+  if (uart2_buf_pos == sizeof(uart2_buf))
+    uart2_buf_pos = 0;
 
-  case HASH:
-    if (temp == '#') {
-      write_buf ^= 1;
-      expecting_char = BANG;
-      read_buf_size = pos;
-      break;
-    }
-
-    buf[write_buf][pos] = temp;
-
-    if (++pos == sizeof(buf[0])) {
-      /* buffer overflow, wait for start of new command */
-      expecting_char = BANG;
-      break;
-    }
-
-    break;
-  }
-
-  HAL_UART_Receive_IT(&huart2, &temp, 1);
+  HAL_UART_Receive_IT(&huart2, &tmp, 1);
 }
 /* USER CODE END 1 */
