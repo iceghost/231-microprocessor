@@ -1,3 +1,6 @@
+adc1: Analog.STM32_ADC @ sysbus 0x40012000
+    IRQ -> nvic@18
+
 fsmcBank1: Memory.MappedMemory @ sysbus 0x60000000
     size: 0x10000000
 
