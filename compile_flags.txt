@@ -1,0 +1,9 @@
+-DUSE_HAL_DRIVER
+-Iinclude
+-ICore/Inc
+-ISTM32CubeF4/Drivers/STM32F4xx_HAL_Driver/Inc
+-ISTM32CubeF4/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy
+-ISTM32CubeF4/Drivers/CMSIS/Device/ST/STM32F4xx/Include
+-ISTM32CubeF4/Drivers/CMSIS/Include
+-DSTM32F407xx
+-ferror-limit=0
