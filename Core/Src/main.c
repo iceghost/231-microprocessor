@@ -18,8 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stm32f4xx_hal_tim.h"
-#include "stm32f4xx_hal_uart.h"
+#include "adc.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -27,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <assert.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -91,13 +91,21 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_TIM2_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-
+  uint8_t buf[1024];
+  size_t len;
+  uart2_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) {
+    if (uart2_read(buf, sizeof(buf) - 1, &len) == UART_OK) {
+      buf[len] = '\0';
+      if (strcmp((void *)buf, "RST")) {
+      }
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
